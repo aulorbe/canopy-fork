@@ -47,6 +47,8 @@ chat_engine:
   # -------------------------------------------------------------------------------------------------------------
   llm: &llm
     type: AzureOpenAILLM                     # Options: [AzureOpenAILLM]
+    params:
+        model_name: "gpt-3.5-turbo-0613"
 
 
       # You can add any additional parameters which are supported by the LLM's `ChatCompletion()` API. The values set
