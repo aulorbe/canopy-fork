@@ -48,7 +48,7 @@ class AzureOpenAILLM(OpenAILLM):
 
         """  # noqa: E501
         self.model_name = model_name
-
+        self.api_version = api_version
         try:
             self._client = openai.AzureOpenAI(
                 azure_deployment=model_name,
@@ -98,7 +98,7 @@ class AzureOpenAILLM(OpenAILLM):
                 raise RuntimeError(
                     f"Failed to connect to your Azure OpenAI. Please make sure that "
                     f"you have provided the correct deployment name: {self.model_name} "
-                    f"and API version: {self._client._api_version}. "
+                    f"and API version: {self.api_version}. "
                     f"Underlying Error:\n{self._format_openai_error(e)}"
                 ) from e
         else:
