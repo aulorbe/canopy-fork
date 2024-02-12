@@ -36,6 +36,7 @@ class AzureOpenAIRecordEncoder(OpenAIRecordEncoder):
                         Defaults to 400.
             **kwargs: Additional arguments to pass to the underlying `pinecone-text.AzureOpenAIEncoder`.
         """  # noqa: E501
+        self.model_name = model_name
         try:
             encoder = AzureOpenAIEncoder(model_name, api_version=api_version, **kwargs)
         except (openai.OpenAIError, ValueError) as e:
