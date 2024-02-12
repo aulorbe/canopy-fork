@@ -21,7 +21,7 @@ class AzureOpenAIRecordEncoder(OpenAIRecordEncoder):
     def __init__(
             self,
             *,
-            model_name: str,
+            deployment_name: str,  # TODO: change in pinecone-text too
             api_version: str = "2023-12-01-preview",
             batch_size: int = 400,
             **kwargs
@@ -30,15 +30,16 @@ class AzureOpenAIRecordEncoder(OpenAIRecordEncoder):
         Initialize the AzureOpenAIRecordEncoder
 
         Args:
-            model_name: The name of embeddings model deployment to use for encoding
+            deployment_name: The name of embeddings model deployment to use for encoding
             api_version: The Azure OpenAI API version to use. Defaults to "2023-12-01-preview".
             batch_size: The number of documents or queries to encode at once.
                         Defaults to 400.
             **kwargs: Additional arguments to pass to the underlying `pinecone-text.AzureOpenAIEncoder`.
         """  # noqa: E501
-        self.model_name = model_name
+        self.deployment_name = deployment_name
+        self.api_version = api_version
         try:
-            encoder = AzureOpenAIEncoder(model_name, api_version=api_version, **kwargs)
+            encoder = AzureOpenAIEncoder(deployment_name, api_version=api_version, **kwargs)
         except (openai.OpenAIError, ValueError) as e:
             raise RuntimeError(
                 "Failed to connect to Azure OpenAI, please make sure that the "
@@ -66,8 +67,8 @@ class AzureOpenAIRecordEncoder(OpenAIRecordEncoder):
         elif isinstance(err, openai.NotFoundError):
             return (
                 f"Failed to connect to your Azure OpenAI. Please make sure that "
-                f"you have provided the correct deployment name: {self.model_name} "
-                f"and API version: {self._client._api_version}. "
+                f"you have provided the correct deployment name: {self.deployment_name} "
+                f"and API version: {self.api_version}. "
                 f"Underlying Error:\n{self._format_openai_error(err)}"
             )
         else:
